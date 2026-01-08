@@ -1,0 +1,658 @@
+<div>
+<style>
+.concept-block {
+    background-color: #f0f7ff;
+    border-left: 4px solid #2196F3;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+.performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 15px;
+}
+.performance-table th,
+.performance-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+.performance-table th {
+    background-color: #2196F3;
+    color: white;
+    font-weight: bold;
+}
+.performance-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.performance-table tr:hover {
+    background-color: #f0f7ff;
+}
+.info {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+.warning {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+.code-block {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 15px 0;
+    position: relative;
+}
+.code-block pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+}
+.code-block code {
+    color: #d4d4d4;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.ai-tech {
+  background-color: #e6f3ff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #0066cc;
+}
+.code-block.collapsed {
+    max-height: 200px;
+}
+.code-block.expanded {
+    max-height: none;
+}
+.code-toggle-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 102, 204, 0.8);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+.code-toggle-btn:hover {
+    background-color: rgba(0, 102, 204, 1);
+}
+.code-block.collapsed .code-toggle-btn::after {
+    content: "펼치기 ▼";
+}
+.code-block.expanded .code-toggle-btn::after {
+    content: "접기 ▲";
+}
+.code-fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(transparent, #1e1e1e);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+.code-block.expanded .code-fade-overlay {
+    opacity: 0;
+}
+</style>
+</div>
+<p data-ke-size="size16">여러분의 노트북이나 스마트폰에서도 GPT 수준의 AI가 돌아간다면 어떨까요? 최근 <span class="ai-tech">Liquid AI</span>가 공개한 <span class="ai-tech">LFM2.5-1.2B-Instruct</span> 모델이 바로 그런 가능성을 현실로 만들고 있습니다. 오늘은 이 경량화된 온디바이스 AI 모델의 핵심 특징과 실제로 내 컴퓨터에서 실행해보는 방법을 소개합니다.</p>
+<p>[##_Image|kage@Rrkqf/dJMcafSQhQt/AAAAAAAAAAAAAAAAAAAAAHr_Csf0NFFZh3imffTq_xuEmYjBnu4xinlVcZHZ85L1/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=MaUoYgqikSV3tv%2F5MlMIaHcOLYM%3D|CDM|1.3|{"originWidth":1316,"originHeight":400,"style":"alignCenter","caption":"🤖LFM2.5-1.2B-Instruct 무료 사용법 및 로컬 설치 가이드"}_##]</p>
+<h2 id="what-is-lfm2-5" data-ke-size="size23">🤖 LFM2.5란 무엇인가요?</h2>
+<p data-ke-size="size16"><span class="ai-tech">LFM2.5</span>(Liquid Foundation Model 2.5)는 <span class="ai-tech">Liquid AI</span>가 개발한 온디바이스 배포에 최적화된 하이브리드 아키텍처 기반의 언어 모델 시리즈입니다. 특히 <span class="ai-tech">LFM2.5-1.2B-Instruct</span>는 12억 개의 파라미터(Parameters)를 가진 경량 모델로, 개인용 컴퓨터나 모바일 기기에서도 효율적으로 실행할 수 있도록 설계되었습니다.</p>
+<div class="concept-block">
+<h4 data-ke-size="size20">💡 <b>파라미터(Parameter)란?</b></h4>
+<p data-ke-size="size16">AI 모델에서 파라미터는 모델이 학습한 '지식의 양'을 나타내는 숫자들의 집합입니다. 쉽게 비유하면, 인간의 뇌에 있는 시냅스 연결과 비슷합니다. 파라미터가 많을수록 모델은 더 복잡한 패턴을 학습할 수 있지만, 그만큼 더 많은 컴퓨팅 파워와 메모리가 필요합니다. 예를 들어, GPT-4와 같은 대형 모델은 수조 개의 파라미터를 가지고 있어 강력한 성능을 발휘하지만, 일반 개인용 컴퓨터에서는 실행하기 어렵습니다.</p>
+</div>
+<p data-ke-size="size16">LFM2.5는 <span class="ai-tech">LFM2</span> 아키텍처를 기반으로 10T 토큰에서 28T 토큰으로 사전 학습 데이터를 확장하고, 강화 학습(Reinforcement Learning)을 통해 명령 수행 능력을 대폭 개선했습니다. 이는 같은 크기의 다른 모델들보다 우수한 성능을 발휘하는 핵심 비결입니다.</p>
+<h2 id="lfm2-architecture" data-ke-size="size23">🔬 LFM2 아키텍처의 핵심 혁신</h2>
+<p data-ke-size="size16"><span class="ai-tech">LFM2</span>의 가장 큰 차별점은 일반적인 Transformer 모델과는 완전히 다른 <span class="ai-tech">하이브리드 아키텍처</span>를 사용한다는 것입니다. LFM2는 <span class="ai-tech">Liquid Time-constant Networks (LTCs)</span>에서 영감을 받아 개발된 새로운 접근 방식을 채택했습니다.</p>
+<div class="concept-block">
+<h4 data-ke-size="size20">💡 <b>일반적인 Transformer와 LFM2의 차이</b></h4>
+<p data-ke-size="size16">대부분의 최신 LLM은 <span class="ai-tech">Self-Attention</span> 메커니즘을 기반으로 하는 Transformer 아키텍처를 사용합니다. 반면, LFM2는 <span class="ai-tech">컨볼루션(Convolution)</span>과 <span class="ai-tech">어텐션(Attention)</span>을 하이브리드로 결합하고, <span class="ai-tech">입력 의존형 게이트(Input-dependent Gates)</span>를 도입하여 더 효율적인 정보 처리를 가능하게 합니다.</p>
+</div>
+<h3 id="architecture-details" data-ke-size="size20">🧱 LFM2의 구조적 특징</h3>
+<p data-ke-size="size16">LFM2는 총 <span class="ai-tech">16개 블록</span>으로 구성되어 있으며, 각 블록은 다음과 같은 특수한 구조를 가집니다.</p>
+<div class="info">
+<h4 data-ke-size="size20">📌 <b>블록 구성</b></h4>
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>10개의 Double-Gated Short-Range LIV Convolution 블록</b>: 입력에 따라 동적으로 변하는 게이트를 가진 짧은 범위 컨볼루션</li>
+<li><b>6개의 Grouped Query Attention (GQA) 블록</b>: 효율적인 어텐션 메커니즘</li>
+<li><b>각 블록에 SwiGLU 활성화 함수와 RMSNorm 레이어 포함</b></li>
+</ul>
+</div>
+<p data-ke-size="size16">LFM2의 핵심인 <span class="ai-tech">LIV (Linear Input-Varying) Convolution</span> 연산은 다음과 같이 작동합니다.</p>
+<div class="code-block">
+<pre class="python"><code>def lfm2_conv(x):
+    B, C, x = linear(x)      # 입력 투영
+    x = B * x                 # 게이팅 (게이트가 입력에 의존)
+    x = conv(x)               # 짧은 범위 컨볼루션
+    x = C * x                 # 게이팅
+    x = linear(x)             # 최종 투영
+    return x</code></pre>
+<button class="code-toggle-btn"></button>
+<div class="code-fade-overlay">&nbsp;</div>
+</div>
+<h3 id="why-hybrid" data-ke-size="size20">🤔 하이브리드 아키텍처가 더 빠른 이유는?</h3>
+<table class="performance-table" data-ke-align="alignLeft">
+<thead>
+<tr>
+<th>특징</th>
+<th>일반적인 Transformer</th>
+<th>LFM2 하이브리드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>주요 연산</b></td>
+<td>Self-Attention만 사용</td>
+<td>Convolution + Attention 결합</td>
+</tr>
+<tr>
+<td><b>게이트 메커니즘</b></td>
+<td>고정된 가중치</td>
+<td><b>입력에 따라 동적으로 변하는 게이트</b></td>
+</tr>
+<tr>
+<td><b>CPU 최적화</b></td>
+<td>GPU에 최적화되어 있음</td>
+<td><b>CPU에서도 매우 빠름</b></td>
+</tr>
+<tr>
+<td><b>디코딩 속도</b></td>
+<td>기준</td>
+<td><b>Qwen3 대비 최대 2배 빠름</b></td>
+</tr>
+<tr>
+<td><b>메모리 효율</b></td>
+<td>상대적으로 높음</td>
+<td><b>온디바이스 실행에 최적화</b></td>
+</tr>
+</tbody>
+</table>
+<h3 id="star-engine" data-ke-size="size20">⭐ STAR 엔진으로 발견된 최적 아키텍처</h3>
+<p data-ke-size="size16">LFM2의 아키텍처는 인간이 직접 설계한 것이 아니라, Liquid AI가 개발한 <span class="ai-tech">STAR (Neural Architecture Search)</span> 엔진이 자동으로 발견했습니다.</p>
+<div class="concept-block">
+<h4 data-ke-size="size20">💡 <b>STAR 엔진의 특별한 평가 방식</b></h4>
+<p data-ke-size="size16">일반적인 NAS(Neural Architecture Search)는 검증 손실(Validation Loss)을 최소화하는 아키텍처를 찾지만, STAR는 다음과 같은 실제 배포 환경에서의 성능을 직접 측정합니다.</p>
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>50개 이상의 내부 평가 지표</b>: 지식 재현, 다단계 추론, 저자원 언어 이해, 명령 따르기, 도구 사용 등</li>
+<li><b>실제 하드웨어 테스트</b>: Qualcomm Snapdragon 임베디드 SoC CPU에서 메모리 사용량과 속도를 직접 측정</li>
+<li><b>품질, 메모리, 지연 시간의 균형</b>: 단순한 정확도가 아닌 실제 배포 가능성을 고려</li>
+</ul>
+</div>
+<h3 id="cpu-optimization" data-ke-size="size20">🖥️ CPU에서의 효율성 극대화</h3>
+<p data-ke-size="size16">LFM2가 짧은 범위 컨볼루션(Short-Range Convolution)을 적극적으로 사용하는 이유는 바로 <span class="ai-tech">CPU 효율성</span>입니다. 컨볼루션 연산은 CPU의 캐시 메모리를 효율적으로 활용할 수 있어, 일반적인 Attention보다 훨씬 빠르게 실행됩니다.</p>
+<div class="warning">
+<h4 data-ke-size="size20">⚠️ <b>설계 트레이드오프</b></h4>
+<p data-ke-size="size16">LFM2는 임베디드 SoC CPU와 같은 <span class="ai-tech">특정 하드웨어 클래스</span>를 타겟으로 설계되었습니다. 현재는 주로 CPU에 최적화되어 있지만, Liquid AI는 GPU와 NPU 같은 도메인 특화 가속기에 대한 최적화도 진행 중이라고 합니다.</p>
+</div>
+<p data-ke-size="size16">이러한 독창적인 아키텍처 덕분에 LFM2는 경쟁 모델들보다 <span class="ai-tech">더 적은 파라미터로 더 높은 성능</span>을 달성하고, <span class="ai-tech">CPU에서도 2배 더 빠른 디코딩 속도</span>를 제공할 수 있습니다.</p>
+<h2 id="key-features" data-ke-size="size23">🚀 주요 특징 및 장점</h2>
+<h3 id="performance-benchmarks" data-ke-size="size20">📊 경쟁 모델 대비 성능</h3>
+<p data-ke-size="size16">LFM2.5-1.2B-Instruct는 같은 크기의 경쟁 모델들과 비교할 때 압도적인 성능을 보여줍니다. 특히 <span class="ai-tech">GPQA</span>(전문 지식 질의응답), <span class="ai-tech">MMLU-Pro</span>(다양한 주제 이해도), <span class="ai-tech">IFEval</span>(명령 따르기 능력) 등의 벤치마크에서 최고 수준의 결과를 기록했습니다.</p>
+<table class="performance-table" data-ke-align="alignLeft">
+<thead>
+<tr>
+<th>모델</th>
+<th>GPQA</th>
+<th>MMLU-Pro</th>
+<th>IFEval</th>
+<th>IFBench</th>
+<th>AIME25</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>LFM2.5-1.2B-Instruct</b></td>
+<td><b>38.89</b></td>
+<td><b>44.35</b></td>
+<td><b>86.23</b></td>
+<td><b>47.33</b></td>
+<td><b>14.00</b></td>
+</tr>
+<tr>
+<td>Qwen3-1.7B</td>
+<td>34.85</td>
+<td>42.91</td>
+<td>73.68</td>
+<td>21.33</td>
+<td>9.33</td>
+</tr>
+<tr>
+<td>Llama 3.2 1B Instruct</td>
+<td>16.57</td>
+<td>20.80</td>
+<td>52.37</td>
+<td>15.93</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td>Gemma 3 1B IT</td>
+<td>24.24</td>
+<td>14.04</td>
+<td>63.25</td>
+<td>20.47</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+<div class="info">
+<h4 data-ke-size="size20">📌 <b>벤치마크 설명</b></h4>
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>GPQA</b>: Graduate-Level Google-Proof Q&amp;A - 대학원 수준의 전문 지식을 평가하는 시험</li>
+<li><b>MMLU-Pro</b>: Massive Multitask Language Understanding - 다양한 분야의 이해도를 측정</li>
+<li><b>IFEval</b>: Instruction Following Evaluation - AI가 사용자의 명령을 얼마나 잘 따르는지 평가</li>
+<li><b>AIME25</b>: American Invitational Mathematics Examination - 수학 문제 해결 능력 측정</li>
+</ul>
+</div>
+<h3 id="inference-speed" data-ke-size="size20">⚡ 빠른 추론 속도와 낮은 메모리 사용</h3>
+<p data-ke-size="size16">LFM2.5의 가장 큰 장점 중 하나는 <span class="ai-tech">CPU에서도 매우 빠른 추론 속도</span>를 제공한다는 점입니다. 특히 <span class="ai-tech">GGUF</span> 양자화 버전을 사용하면 일반 노트북 CPU에서도 실시간으로 사용할 수 있습니다.</p>
+<table class="performance-table" data-ke-align="alignLeft">
+<thead>
+<tr>
+<th>기기</th>
+<th>추론 방식</th>
+<th>프레임워크</th>
+<th>모델</th>
+<th>메모리 사용량</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMD Ryzen AI 9 HX 370</td>
+<td>CPU</td>
+<td>llama.cpp (Q4_0)</td>
+<td>LFM2.5-1.2B-Instruct</td>
+<td><b>856MB</b></td>
+</tr>
+<tr>
+<td>Qualcomm Snapdragon X Elite</td>
+<td>NPU</td>
+<td>NexaML</td>
+<td>LFM2.5-1.2B-Instruct</td>
+<td>0.9GB</td>
+</tr>
+<tr>
+<td>Samsung Galaxy S25 Ultra</td>
+<td>CPU</td>
+<td>llama.cpp (Q4_0)</td>
+<td>LFM2.5-1.2B-Instruct</td>
+<td>719MB</td>
+</tr>
+</tbody>
+</table>
+<div class="concept-block">
+<h4 data-ke-size="size20">💡 <b>양자화(Quantization)란?</b></h4>
+<p data-ke-size="size16">양자화는 AI 모델의 정밀도를 낮추어 모델 크기를 줄이는 기술입니다. 쉽게 말해, 고화질 이미지를 압축해서 저장하는 것과 비슷합니다. <span class="ai-tech">FP32</span>(32비트 부동소수점)로 저장된 모델을 <span class="ai-tech">Q4_0</span>(4비트 양자화)로 변환하면 모델 크기는 약 1/4로 줄어들지만, 성능 저하는 크지 않습니다. 이 덕분에 일반 PC에서도 큰 모델을 실행할 수 있게 됩니다.</p>
+</div>
+<h3 id="tool-use" data-ke-size="size20">🛠️ 툴 사용(Function Calling) 지원</h3>
+<p data-ke-size="size16">LFM2.5-1.2B-Instruct는 <span class="ai-tech">Function Calling</span>(함수 호출) 기능을 지원하여, AI가 외부 API나 도구를 직접 호출하여 작업을 수행할 수 있습니다. 예를 들어, 날씨 조회, 데이터베이스 검색, 계산기 사용 등의 작업을 AI가 자율적으로 수행할 수 있습니다.</p>
+<p data-ke-size="size16">이 기능은 <span class="ai-tech">에이전트(Agent)</span> 형태의 AI 애플리케이션을 개발할 때 특히 유용합니다. 예를 들어, 사용자가 "서울 날씨 알려줘"라고 요청하면, AI가 자동으로 날씨 API를 호출하여 정보를 가져온 후 자연스러운 문장으로 답변할 수 있습니다.</p>
+<h3 id="multimodal-variants" data-ke-size="size20">👁️ 멀티모달 변형 모델</h3>
+<p data-ke-size="size16">LFM2.5 시리즈는 텍스트만 처리하는 모델 외에도 <span class="ai-tech">Vision-Language</span>(이미지+텍스트)와 <span class="ai-tech">Audio-Language</span>(오디오+텍스트) 모델도 제공합니다.</p>
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>LFM2.5-VL-1.6B</b>: 이미지와 텍스트을 이해하는 시각-언어 모델</li>
+<li><b>LFM2.5-Audio-1.5B</b>: 음성 입력/출력을 지원하는 오디오-언어 모델</li>
+<li><b>LFM2.5-1.2B-JP</b>: 일본어에 최적화된 채팅 모델</li>
+</ul>
+<h2 id="when-to-use" data-ke-size="size23">🎯 어떤 상황에서 사용하면 좋을까요?</h2>
+<p data-ke-size="size16">LFM2.5-1.2B-Instruct는 다음과 같은 상황에서 특히 유용합니다.</p>
+<div class="concept-block">
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>🏠 로컬 환경에서 개인정보 보호가 필요할 때</b>: 클라우드에 데이터를 보내지 않고 내 컴퓨터에서만 AI를 실행하고 싶을 때</li>
+<li><b>⚡ 빠른 응답 속도가 필요할 때</b>: 인터넷 지연 없이 즉각적인 AI 응답이 필요한 애플리케이션</li>
+<li><b>💰 비용 절감이 필요할 때</b>: API 호출 비용 없이 무료로 AI를 사용하고 싶을 때</li>
+<li><b>🚗 오프라인 환경에서 AI가 필요할 때</b>: 인터넷 연결이 없는 곳에서도 AI 기능이 필요할 때</li>
+<li><b>📱 모바일/임베디드 기기에 탑재할 때</b>: 스마트폰, 차량, IoT 기기 등 리소스가 제한된 환경</li>
+</ul>
+</div>
+<p data-ke-size="size16">반면, 다음과 같은 작업에는 적합하지 않을 수 있습니다.</p>
+<div class="warning">
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>📚 방대한 지식이 필요한 작업</b>: 최신 뉴스 요약, 전문 분야 심층 분석 등</li>
+<li><b>💻 복잡한 코딩 작업</b>: 대규모 프로젝트 코드 생성, 디버깅 등</li>
+</ul>
+</div>
+<p data-ke-size="size16">이러한 기준으로 보면, 본인의 사용 패턴이 어느 쪽에 더 가까운지에 따라 선택이 달라질 수 있습니다.</p>
+<h2 id="installation-guide" data-ke-size="size23">💻 내 컴퓨터에서 직접 실행해보기</h2>
+<p data-ke-size="size16">이제 실제로 내 컴퓨터에서 LFM2.5-1.2B-Instruct를 실행해보겠습니다. 다양한 방법이 있지만, 가장 쉬운 세 가지 방법을 소개합니다.</p>
+<h3 id="method-1-transformers" data-ke-size="size20">방법 1: Hugging Face Transformers 라이브러리 (GPU 권장)</h3>
+<p data-ke-size="size16">Python과 <span class="ai-tech">Transformers</span> 라이브러리를 사용하는 가장 기본적인 방법입니다. GPU가 있는 경우 가장 빠릅니다.</p>
+<div class="code-block">
+<pre class="python"><code># 먼저 필요한 라이브러리 설치
+# pip install transformers torch
+
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer
+
+# 모델 ID 설정
+model_id = "LiquidAI/LFM2.5-1.2B-Instruct"
+
+# 모델과 토크나이저 로드
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    device_map="auto",  # GPU가 있으면 자동으로 사용
+    torch_dtype="auto",  # 자동으로 데이터 타입 선택
+)
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+# 스트리머 설정 (실시간 출력)
+streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+
+# 질문 준비
+prompt = "대한민국의 수도는 어디인가요?"
+
+# 채팅 템플릿 적용
+input_ids = tokenizer.apply_chat_template(
+    [{"role": "user", "content": prompt}],
+    add_generation_prompt=True,
+    return_tensors="pt",
+).to(model.device)
+
+# 텍스트 생성
+output = model.generate(
+    input_ids,
+    do_sample=True,
+    temperature=0.1,    # 창의성 조절 (낮을수록 더 결정론적)
+    top_k=50,          # 상위 K개 토큰에서 선택
+    top_p=0.1,         # 누적 확률 기반 선택
+    repetition_penalty=1.05,  # 반복 방지
+    max_new_tokens=512,
+    streamer=streamer,
+)</code></pre>
+<button class="code-toggle-btn"></button>
+<div class="code-fade-overlay">&nbsp;</div>
+</div>
+<div class="info">
+<h4 data-ke-size="size20">📌 <b>매개변수(Parameter) 설명</b></h4>
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li><b>temperature</b>: 0에 가까울수록 더 결정론적이고 정확한 답변, 1에 가까울수록 더 창의적이고 다양한 답변</li>
+<li><b>top_k</b>: 상위 K개의 가장 가능성 높은 토큰 중에서 선택</li>
+<li><b>top_p</b>: 누적 확률이 p가 될 때까지의 토큰 후보 중에서 선택 (nucleus sampling)</li>
+<li><b>repetition_penalty</b>: 반복되는 토큰에 페널티를 주어 같은 내용이 반복되는 것을 방지</li>
+</ul>
+</div>
+<h3 id="method-2-ollama" data-ke-size="size20">방법 2: Ollama로 간편하게 실행 (CPU 추천)</h3>
+<p data-ke-size="size16"><span class="ai-tech">Ollama</span>는 로컬 LLM을 가장 쉽게 실행할 수 있는 도구입니다. GGUF 양자화 모델을 사용하여 CPU에서도 빠르게 실행할 수 있습니다.</p>
+<p data-ke-size="size16"><b>1. Ollama 설치</b></p>
+<p data-ke-size="size16">먼저 <a href="https://ollama.com" target="_blank" rel="noopener">Ollama 공식 웹사이트</a>에서 운영체제에 맞는 버전을 다운로드하여 설치합니다.</p>
+<p data-ke-size="size16"><b>2. Modelfile 작성</b></p>
+<div class="code-block">
+<pre class="bash" data-ke-language="bash"><code># Modelfile
+
+FROM ./LFM2.5-1.2B-Instruct-Q4_K_M.gguf
+
+PARAMETER temperature 0.1
+PARAMETER top_k 50
+PARAMETER top_p 0.1
+PARAMETER repeat_penalty 1.05
+
+TEMPLATE """
+&lt;|startoftext|&gt;&lt;|im_start|&gt;system
+You are a helpful assistant trained by Liquid AI.&lt;|im_end|&gt;
+&lt;|im_start|&gt;user
+{{ .Prompt }}&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+"""</code></pre>
+<button class="code-toggle-btn"></button>
+<div class="code-fade-overlay">&nbsp;</div>
+</div>
+<p data-ke-size="size16"><b>3. 모델 생성 및 실행</b></p>
+<div class="code-block">
+<pre class="bash" data-ke-language="bash"><code># 터미널에서 다음 명령어 실행
+
+# 모델 생성
+ollama create lfm2.5 -f Modelfile
+
+# 모델 실행
+ollama run lfm2.5</code></pre>
+<button class="code-toggle-btn"></button>
+<div class="code-fade-overlay">&nbsp;</div>
+</div>
+<p data-ke-size="size16">이제 대화창이 뜨고 자연스럽게 대화할 수 있습니다!</p>
+<h3 id="method-3-lm-studio" data-ke-size="size20">방법 3: LM Studio (GUI 사용자 추천)</h3>
+<p data-ke-size="size16"><span class="ai-tech">LM Studio</span>는 별도의 코딩 없이 GUI로 로컬 LLM을 실행할 수 있는 애플리케이션입니다.</p>
+<p data-ke-size="size16"><b>1. LM Studio 설치</b></p>
+<p data-ke-size="size16"><a href="https://lmstudio.ai" target="_blank" rel="noopener">LM Studio 웹사이트</a>에서 앱을 다운로드하여 설치합니다.</p>
+<p data-ke-size="size16"><b>2. 모델 검색 및 다운로드</b></p>
+<p data-ke-size="size16">LM Studio를 실행하고 검색창에 "LFM2.5"를 입력한 후, <span class="ai-tech">LFM2.5-1.2B-Instruct-GGUF</span> 모델을 찾아 다운로드합니다.</p>
+<p data-ke-size="size16"><b>3. 채팅 시작</b></p>
+<p data-ke-size="size16">다운로드가 완료되면 바로 채팅을 시작할 수 있습니다. 사이드바에서 모델을 선택하고 채팅 탭에서 대화를 시작하세요.</p>
+<h2 id="tool-calling-example" data-ke-size="size23">🔧 Function Calling 실습</h2>
+<p data-ke-size="size16">LFM2.5의 강력한 기능 중 하나인 <span class="ai-tech">Function Calling</span>을 직접 체험해보겠습니다. 날씨 조회 기능을 만들어 보겠습니다.</p>
+<div class="code-block">
+<pre class="python"><code>import json
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# 모델 로드
+model_id = "LiquidAI/LFM2.5-1.2B-Instruct"
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype="auto",
+    device_map="auto",
+)
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+# 도구(Tool) 정의
+tools = [{
+    "name": "get_current_temperature",
+    "description": "Get the current temperature at a location",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "location": {
+                "type": "string",
+                "description": "The location to get the temperature for, in the format 'City, Country'"
+            },
+            "unit": {
+                "type": "string",
+                "enum": ["celsius", "fahrenheit"],
+                "description": "The unit to return the temperature in"
+            }
+        },
+        "required": ["location", "unit"]
+    }
+}]
+
+# 시스템 프롬프트에 도구 목록 추가
+system_prompt = f"List of tools: {json.dumps(tools)}"
+
+# 사용자 질문
+messages = [
+    {"role": "system", "content": system_prompt},
+    {"role": "user", "content": "What's the temperature in Seoul, South Korea in celsius?"}
+]
+
+# 토큰화 및 생성
+inputs = tokenizer.apply_chat_template(
+    messages,
+    add_generation_prompt=True,
+    return_tensors="pt",
+).to(model.device)
+
+outputs = model.generate(**inputs, max_new_tokens=256)
+response = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=False)
+
+print("AI Response:", response)
+
+# 응답에서 함수 호출 파싱
+# 실제로는 정규표현식 등을 사용하여 파싱해야 합니다
+# 예: &lt;|tool_call_start|&gt;[get_current_temperature(location="Seoul, South Korea", unit="celsius")]&lt;|tool_call_end|&gt;
+
+# 함수 실행 결과를 다시 모델에 전달하여 최종 답변 생성</code></pre>
+<button class="code-toggle-btn"></button>
+<div class="code-fade-overlay">&nbsp;</div>
+</div>
+<div class="concept-block">
+<h4 data-ke-size="size20">💡 <b>Function Calling 동작 원리</b></h4>
+<ol style="list-style-type: decimal;" data-ke-list-type="decimal">
+<li><b>도구 정의</b>: AI가 사용할 수 있는 함수들의 목록을 JSON 형식으로 정의합니다.</li>
+<li><b>함수 호출 생성</b>: AI가 사용자의 질문을 분석하여 적절한 함수를 호출하는 코드를 생성합니다. 예: <code>[get_current_temperature(location="Seoul")]</code></li>
+<li><b>함수 실행</b>: 사용자의 코드에서 실제 함수를 실행합니다.</li>
+<li><b>결과 전달</b>: 함수 실행 결과를 다시 AI에게 전달하여 자연스러운 답변을 생성하게 합니다.</li>
+</ol>
+</div>
+<h2 id="comparison" data-ke-size="size23">⚖️ 다른 로컬 LLM과 비교</h2>
+<p data-ke-size="size16">LFM2.5-1.2B-Instruct를 다른 인기 있는 로컬 LLM과 비교해보겠습니다.</p>
+<table class="performance-table" data-ke-align="alignLeft">
+<thead>
+<tr>
+<th>특징</th>
+<th>LFM2.5-1.2B</th>
+<th>Llama 3.2 1B</th>
+<th>Qwen3-1.7B</th>
+<th>Gemma 3 1B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>파라미터 수</b></td>
+<td>1.2B</td>
+<td>1B</td>
+<td>1.7B</td>
+<td>1B</td>
+</tr>
+<tr>
+<td><b>메모리 사용량 (Q4)</b></td>
+<td><b>~800MB</b></td>
+<td>~700MB</td>
+<td>~1.3GB</td>
+<td>~800MB</td>
+</tr>
+<tr>
+<td><b>명령 따르기 (IFEval)</b></td>
+<td><b>86.23%</b></td>
+<td>52.37%</td>
+<td>73.68%</td>
+<td>63.25%</td>
+</tr>
+<tr>
+<td><b>수학 (AIME25)</b></td>
+<td><b>14.00</b></td>
+<td>0.33</td>
+<td>9.33</td>
+<td>1.00</td>
+</tr>
+<tr>
+<td><b>Function Calling</b></td>
+<td><b>지원</b></td>
+<td>지원</td>
+<td>지원</td>
+<td>지원</td>
+</tr>
+<tr>
+<td><b>오픈 소스 라이선스</b></td>
+<td><b>LFM License</b></td>
+<td>Llama 3.2 Community</td>
+<td>Qwen License</td>
+<td>Gemma License</td>
+</tr>
+</tbody>
+</table>
+<p data-ke-size="size16">LFM2.5는 특히 <span class="ai-tech">명령 따르기 능력</span>과 <span class="ai-tech">수학 문제 해결 능력</span>에서 돋보이는 성과를 보이고 있습니다. 이는 복잡한 작업을 지시하고 결과를 받아야 하는 <span class="ai-tech">AI 에이전트</span> 개발에 매우 적합하다는 의미입니다.</p>
+<p data-ke-size="size16">이러한 기능들 중에서 현재 프로젝트에 가장 필요한 기능은 무엇일까요?</p>
+<h2 id="use-cases" data-ke-size="size23">🎯 실제 활용 사례</h2>
+<p data-ke-size="size16">LFM2.5-1.2B-Instruct는 다양한 실제 시나리오에서 활용할 수 있습니다.</p>
+<h3 id="use-case-1" data-ke-size="size20">1. 로컬 문서 요약 및 분석</h3>
+<p data-ke-size="size16">개인정보가 포함된 문서를 클라우드에 업로드하지 않고 로컬에서만 요약하고 분석할 수 있습니다. 예를 들어, 의료 기록, 재무 문서, 법률 문서 등 민감한 정보를 처리할 때 유용합니다.</p>
+<h3 id="use-case-2" data-ke-size="size20">2. 개인용 AI 비서</h3>
+<p data-ke-size="size16">내 컴퓨터에서 항상 실행되는 개인용 AI 비서를 만들 수 있습니다. 일정 관리, 이메일 분류, 문서 검색 등의 작업을 AI가 자동으로 처리할 수 있습니다.</p>
+<h3 id="use-case-3" data-ke-size="size20">3. 오프라인 번역</h3>
+<p data-ke-size="size16">인터넷 연결 없이도 문서를 번역할 수 있습니다. LFM2.5는 8개 언어(영어, 한국어, 중국어, 일본어, 프랑스어, 독일어, 스페인어, 아랍어)를 지원합니다.</p>
+<h3 id="use-case-4" data-ke-size="size20">4. IoT 기기 내장형 AI</h3>
+<p data-ke-size="size16">스마트 홈 기기, 자동차, 드론 등 리소스가 제한된 IoT 기기에 AI 기능을 탑재할 수 있습니다. LFM2.5의 낮은 메모리 사용량과 빠른 추론 속도는 이러한 임베디드 환경에 최적화되어 있습니다.</p>
+<p data-ke-size="size16">스펙보다 실제 사용 환경에서 어떤 차이가 나는지를 얼마나 중요하게 볼지는 개인마다 다릅니다.</p>
+<h2 id="conclusion" data-ke-size="size23">🎯 결론</h2>
+<p data-ke-size="size16">LFM2.5-1.2B-Instruct는 온디바이스 AI의 새로운 기준을 제시하는 모델입니다. 1.2B라는 작은 크기에도 불구하고, 경쟁 모델들을 압도하는 성능과 빠른 추론 속도, 그리고 다양한 멀티모달 기능을 제공합니다.</p>
+<p data-ke-size="size16">특히 <span class="ai-tech">개인정보 보호</span>, <span class="ai-tech">비용 절감</span>, <span class="ai-tech">오프라인 실행</span>이 중요한 상황에서 LFM2.5는 훌륭한 선택이 될 수 있습니다. GGUF 양자화 버전을 사용하면 일반 노트북에서도 충분히 실행 가능하며, Ollama나 LM Studio 같은 도구를 활용하면 코딩 없이도 쉽게 사용할 수 있습니다.</p>
+<p data-ke-size="size16">하지만 방대한 지식이 필요한 작업이나 복잡한 코딩 작업에는 아직 한계가 있습니다. 이런 경우에는 더 큰 모델을 사용하는 것이 좋을 수 있습니다.</p>
+<p data-ke-size="size16">여러분도 한번 LFM2.5-1.2B-Instruct를 내 컴퓨터에 설치해서 직접 체험해보시길 추천드립니다. 공식 Hugging Face 페이지에서 모델을 다운로드하고, Ollama나 LM Studio를 통해 쉽게 실행해볼 수 있습니다.</p>
+<p data-ke-size="size16">정답이 정해져 있다기보다는, 어느 기준을 더 중요하게 보느냐의 문제에 가깝습니다.</p>
+<p data-ke-size="size16">여러분도 한번 LFM2.5-1.2B-Instruct를 Hugging Face에서 직접 다운로드하여 사용해보시길 추천드리면서, 저는 다음 시간에 더 유익한 정보를 가지고 다시 찾아뵙겠습니다. 감사합니다.</p>
+<p data-ke-size="size16">&nbsp;</p>
+<div id="coupang-container">
+<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="jmpark333" data-color="#FFDD00" data-emoji="☕" data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff"></script>
+</div>
+<p>[##_Image|kage@W1bvH/btsITTQ40zP/AAAAAAAAAAAAAAAAAAAAAIVsYCcuvLNDMvtkwVYQahtqkalWsrYiKkJcylO13C6w/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&amp;expires=1769871599&amp;allow_ip=&amp;allow_referer=&amp;signature=Hmq%2FDodIA7xZGs0mxWKAlvL47IE%3D|CDM|1.3|{"originWidth":611,"originHeight":610,"style":"alignCenter","link":"https://www.buymeacoffee.com/jmpark333","title":"https://fornewchallenge.tistory.com/","caption":"https://fornewchallenge.tistory.com/"}_##]</p>
+<p data-ke-size="size16">&nbsp;</p>
+<p data-ke-size="size16">&nbsp;</p>
+<hr data-ke-style="style1" />
+<h2 id="sources" data-ke-size="size23"><b>📚 참고 문헌 및 출처</b></h2>
+<ul style="list-style-type: disc;" data-ke-list-type="disc">
+<li>Liquid AI. (2025). <i>LFM2.5-1.2B-Instruct Model Card</i>. Retrieved from <a href="https://huggingface.co/LiquidAI/LFM2.5-1.2B-Instruct" target="_blank" rel="noopener">https://huggingface.co/LiquidAI/LFM2.5-1.2B-Instruct</a></li>
+<li>Liquid AI. (2025). <i>Introducing LFM2.5: The Next Generation of On-Device AI</i>. Retrieved from <a href="https://www.liquid.ai/blog/introducing-lfm2-5-the-next-generation-of-on-device-ai" target="_blank" rel="noopener">https://www.liquid.ai/blog/introducing-lfm2-5-the-next-generation-of-on-device-ai</a></li>
+<li>Liquid AI. (2025). <i>Models | Liquid Docs</i>. Retrieved from <a href="https://docs.liquid.ai/lfm/key-concepts/models" target="_blank" rel="noopener">https://docs.liquid.ai/lfm/key-concepts/models</a></li>
+<li>Liquid AI. (2025). <i>Chat Template | Liquid Docs</i>. Retrieved from <a href="https://docs.liquid.ai/lfm/key-concepts/chat-template" target="_blank" rel="noopener">https://docs.liquid.ai/lfm/key-concepts/chat-template</a></li>
+<li>Liquid AI. (2025). <i>Tool Use | Liquid Docs</i>. Retrieved from <a href="https://docs.liquid.ai/lfm/key-concepts/tool-use" target="_blank" rel="noopener">https://docs.liquid.ai/lfm/key-concepts/tool-use</a></li>
+<li>Liquid AI. (2024). <i>Introducing LFM2: The Fastest On-Device Foundation Models on the Market</i>. Retrieved from <a href="https://www.liquid.ai/blog/liquid-foundation-models-v2-our-second-series-of-generative-ai-models" target="_blank" rel="noopener">https://www.liquid.ai/blog/liquid-foundation-models-v2-our-second-series-of-generative-ai-models</a></li>
+</ul>
+<p data-ke-size="size16">&nbsp;</p>
+<p data-ke-size="size16">&nbsp;</p>
+<p data-ke-size="size16">
+<script>
+// 코드 블록 접기/펼치기 기능
+document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('.code-block');
+
+    codeBlocks.forEach(function(block, index) {
+        const preElement = block.querySelector('pre');
+
+        if (preElement) {
+            const blockHeight = preElement.offsetHeight;
+
+            // 300px 이상인 코드 블록에만 기능 적용
+            if (blockHeight > 300) {
+                block.classList.add('collapsed');
+
+                // 페이드 오버레이 추가
+                const fadeOverlay = document.createElement('div');
+                fadeOverlay.className = 'code-fade-overlay';
+                block.appendChild(fadeOverlay);
+
+                // 토글 버튼 추가
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = 'code-toggle-btn';
+                toggleBtn.setAttribute('data-block-index', index);
+                block.appendChild(toggleBtn);
+
+                // 클릭 이벤트 리스너 추가
+                toggleBtn.addEventListener('click', function() {
+                    toggleCodeBlock(block);
+                });
+            }
+        }
+    });
+
+    function toggleCodeBlock(block) {
+        const isCollapsed = block.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            block.classList.remove('collapsed');
+            block.classList.add('expanded');
+        } else {
+            block.classList.remove('expanded');
+            block.classList.add('collapsed');
+        }
+    }
+});
+</script>
+</p>
+<p data-ke-size="size16">&nbsp;</p>

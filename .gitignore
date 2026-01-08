@@ -42,3 +42,7 @@ Thumbs.db
 # Environment variables
 .env
 .venv
+
+# Big File
+.gguf
+LFM2.5-1.2B-Instruct-Q4_K_M.gguf
